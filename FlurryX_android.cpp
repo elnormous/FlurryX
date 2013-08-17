@@ -1,9 +1,7 @@
 //
 //  FlurryX_android.cpp
-//  MathsHudriks
 //
-//  Created by Dmitry Matyukhin on 30/01/2012.
-//  Copyright (c) 2012 Fancygames. All rights reserved.
+//  Created by Elviss Strazdins (based on FlurryAnalticsX by Dmitry Matyukhin)
 //
 
 #include "FlurryX.h"
@@ -253,7 +251,7 @@ void jendTimedEvent(const char* eventName, CCDictionary* parameters)
 /*
  set user info
  */
-void jsetUserID(const char *userID)
+void jsetUserID(const char* userID)
 {
 	jstring stringArg = setUserIdMethodInfo.env->NewStringUTF(userID);
 	setUserIdMethodInfo.env->CallStaticVoidMethod(setUserIdMethodInfo.classID, setUserIdMethodInfo.methodID, stringArg);
@@ -358,7 +356,7 @@ void FlurryX::logEvent(const char* eventName, const char* paramName, const char*
     CC_SAFE_RELEASE_NULL( params );
 }
 
-void FlurryX::logEvent(const char* eventName, CCDictionary *parameters)
+void FlurryX::logEvent(const char* eventName, CCDictionary* parameters)
 {
 	init();
 	jlogEvent3(eventName, parameters);
@@ -379,7 +377,7 @@ void FlurryX::logEvent(const char* eventName, bool timed)
 	jlogEvent4(eventName, timed);
 }
 
-void FlurryX::logEvent(const char* eventName, CCDictionary *parameters, bool timed)
+void FlurryX::logEvent(const char* eventName, CCDictionary* parameters, bool timed)
 {
 	init();
 	jlogEvent5(eventName, parameters, timed);

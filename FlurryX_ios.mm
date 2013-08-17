@@ -1,9 +1,7 @@
 //
-//  FlurryX.cpp
-//  MathsHudriks
+//  FlurryX_ios.mm
 //
-//  Created by Dmitry Matyukhin on 24/01/2012.
-//  Copyright 2012 Fancygames. All rights reserved.
+//  Created by Elviss Strazdins (based on FlurryAnalticsX by Dmitry Matyukhin)
 //
 
 #import "FlurryX.h"
@@ -40,7 +38,7 @@ NSDictionary* CCDictionaryToNSDictionary(CCDictionary* dictionary)
     return result;
 }
 
-void FlurryX::setAppVersion(const char *version)
+void FlurryX::setAppVersion(const char* version)
 {
     [Flurry setAppVersion:CStrToNSString( version )];
 }
@@ -74,7 +72,7 @@ void FlurryX::setSecureTransportEnabled(bool value)
 /*
  start session, attempt to send saved sessions to server 
  */
-void FlurryX::startSession(const char *apiKey)
+void FlurryX::startSession(const char* apiKey)
 {
     [Flurry startSession:CStrToNSString( apiKey) ];
 }
@@ -82,12 +80,12 @@ void FlurryX::startSession(const char *apiKey)
 /*
  log events or errors after session has started
  */
-void FlurryX::logEvent(const char *eventName)
+void FlurryX::logEvent(const char* eventName)
 {
     [Flurry logEvent:CStrToNSString( eventName )];
 }
 
-void FlurryX::logEvent(const char *eventName, const char *paramName, const char* paramValue)
+void FlurryX::logEvent(const char* eventName, const char* paramName, const char* paramValue)
 {
     CCDictionary* params = new CCDictionary();
     CCString* value = new CCString( paramValue );
@@ -101,12 +99,12 @@ void FlurryX::logEvent(const char *eventName, const char *paramName, const char*
     
 }
 
-void FlurryX::logEvent(const char *eventName, CCDictionary *parameters)
+void FlurryX::logEvent(const char* eventName, CCDictionary* parameters)
 {
     [Flurry logEvent:CStrToNSString( eventName ) withParameters:CCDictionaryToNSDictionary(parameters)];
 }
 
-void FlurryX::logError(const char *errorID, const char *message)
+void FlurryX::logError(const char* errorID, const char* message)
 {
     [Flurry logError:CStrToNSString( errorID ) message:CStrToNSString( message ) exception:nil];
 }
@@ -114,12 +112,12 @@ void FlurryX::logError(const char *errorID, const char *message)
 /* 
  start or end timed events
  */
-void FlurryX::logEvent(const char *eventName, bool timed)
+void FlurryX::logEvent(const char* eventName, bool timed)
 {
     [Flurry logEvent:CStrToNSString( eventName ) timed:timed];    
 }
 
-void FlurryX::logEvent(const char *eventName, CCDictionary *parameters, bool timed)
+void FlurryX::logEvent(const char* eventName, CCDictionary* parameters, bool timed)
 {
 	[Flurry logEvent:CStrToNSString( eventName ) withParameters:CCDictionaryToNSDictionary(parameters) timed:timed];
 }
@@ -129,7 +127,7 @@ void FlurryX::endTimedEvent(const char* eventName)
 	[Flurry endTimedEvent:CStrToNSString(eventName) withParameters:nil];
 }
 
-void FlurryX::endTimedEvent(const char *eventName, CCDictionary * parameters)
+void FlurryX::endTimedEvent(const char* eventName, CCDictionary* parameters)
 {
     [Flurry endTimedEvent:CStrToNSString( eventName) withParameters:CCDictionaryToNSDictionary(parameters)];
 }
@@ -137,7 +135,7 @@ void FlurryX::endTimedEvent(const char *eventName, CCDictionary * parameters)
 /*
  set user info
  */
-void FlurryX::setUserID(const char *userID)
+void FlurryX::setUserID(const char* userID)
 {
     [Flurry setUserID:CStrToNSString( userID )];
 }
