@@ -1,4 +1,4 @@
 FlurryX
 =======
 
-C++ wrapper for Flurry Analytics for Cocos2d-x
+Flurry Analytics C++ wrapper for Cocos2d-x
