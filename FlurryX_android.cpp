@@ -135,19 +135,19 @@ void jlogEvent1(const char* eventName)
 	logEvent1MethodInfo.env->DeleteLocalRef(stringArg);
 }
 
-void jlogEvent3(const char* eventName, CCDictionary* parameters)
+void jlogEvent3(const char* eventName, __Dictionary* parameters)
 {	
 	jobject hashMap = logEvent3MethodInfo.env->NewObject(hashMapClass, hashMapInitMethod);
 	
 	CCArray* keys = parameters->allKeys();
 	
-	CCObject* object;
+	Ref* object;
 	
 	CCARRAY_FOREACH(keys, object)
 	{
-		CCString* key = (CCString*)object;
+		__String* key = (__String*)object;
 		
-		CCString* value = (CCString*)parameters->objectForKey(key->getCString());
+		__String* value = (__String*)parameters->objectForKey(key->getCString());
 		
 		jstring stringKey = logEvent3MethodInfo.env->NewStringUTF(key->getCString());
 		jstring stringValue = logEvent3MethodInfo.env->NewStringUTF(value->getCString());
@@ -184,19 +184,19 @@ void jlogEvent4(const char* eventName, bool timed)
 	logEvent4MethodInfo.env->DeleteLocalRef(stringArg);
 }
 
-void jlogEvent5(const char* eventName, CCDictionary* parameters, bool timed)
+void jlogEvent5(const char* eventName, __Dictionary* parameters, bool timed)
 {	
 	jobject hashMap = logEvent5MethodInfo.env->NewObject(hashMapClass, hashMapInitMethod);
 	
 	CCArray* keys = parameters->allKeys();
 	
-	CCObject* object;
+	Ref* object;
 	
 	CCARRAY_FOREACH(keys, object)
 	{
-		CCString* key = (CCString*)object;
+		__String* key = (__String*)object;
 		
-		CCString* value = (CCString*)parameters->objectForKey(key->getCString());
+		__String* value = (__String*)parameters->objectForKey(key->getCString());
 		
 		jstring stringKey = logEvent5MethodInfo.env->NewStringUTF(key->getCString());
 		jstring stringValue = logEvent5MethodInfo.env->NewStringUTF(value->getCString());
@@ -218,7 +218,7 @@ void jendTimedEvent(const char* eventName)
 	endTimedEvent1MethodInfo.env->DeleteLocalRef(stringArg);
 }
 
-void jendTimedEvent(const char* eventName, CCDictionary* parameters)
+void jendTimedEvent(const char* eventName, __Dictionary* parameters)
 {
 	jstring stringArg = endTimedEvent2MethodInfo.env->NewStringUTF(eventName);
 	
@@ -226,13 +226,13 @@ void jendTimedEvent(const char* eventName, CCDictionary* parameters)
 	
 	CCArray* keys = parameters->allKeys();
 	
-	CCObject* object;
+	Ref* object;
 	
 	CCARRAY_FOREACH(keys, object)
 	{
-		CCString* key = (CCString*)object;
+		__String* key = (__String*)object;
 		
-		CCString* value = (CCString*)parameters->objectForKey(key->getCString());
+		__String* value = (__String*)parameters->objectForKey(key->getCString());
 		
 		jstring stringKey = endTimedEvent2MethodInfo.env->NewStringUTF(key->getCString());
 		jstring stringValue = endTimedEvent2MethodInfo.env->NewStringUTF(value->getCString());
@@ -309,7 +309,7 @@ void FlurryX::setShowErrorInLogEnabled(bool value)
 void FlurryX::setDebugLogEnabled(bool value)
 {
 	init();
-	jsetLogEnabled( value );
+	jsetLogEnabled(value);
 }
 
 void FlurryX::setSessionContinueMillis(long millis)
@@ -321,7 +321,7 @@ void FlurryX::setSessionContinueMillis(long millis)
 void FlurryX::setSecureTransportEnabled(bool value)
 {
 	init();
-	jsetSecureTransportEnabled( value );
+	jsetSecureTransportEnabled(value);
 }
 
 /*
@@ -345,18 +345,18 @@ void FlurryX::logEvent(const char* eventName)
 void FlurryX::logEvent(const char* eventName, const char* paramName, const char* paramValue)
 {
 	init();
-    CCDictionary* params = new CCDictionary();
-    CCString* value = new CCString( paramValue );
+    __Dictionary* params = __Dictionary::create();
+    __String* value = __String::create(paramValue);
     std::string strKey = paramName;
     params->setObject(value, strKey);
 
-    logEvent( eventName, params );
+    logEvent(eventName, params);
     
-    CC_SAFE_RELEASE_NULL( value );
-    CC_SAFE_RELEASE_NULL( params );
+    CC_SAFE_RELEASE_NULL(value);
+    CC_SAFE_RELEASE_NULL(params);
 }
 
-void FlurryX::logEvent(const char* eventName, CCDictionary* parameters)
+void FlurryX::logEvent(const char* eventName, __Dictionary* parameters)
 {
 	init();
 	jlogEvent3(eventName, parameters);
@@ -377,7 +377,7 @@ void FlurryX::logEvent(const char* eventName, bool timed)
 	jlogEvent4(eventName, timed);
 }
 
-void FlurryX::logEvent(const char* eventName, CCDictionary* parameters, bool timed)
+void FlurryX::logEvent(const char* eventName, __Dictionary* parameters, bool timed)
 {
 	init();
 	jlogEvent5(eventName, parameters, timed);
@@ -389,7 +389,7 @@ void FlurryX::endTimedEvent(const char* eventName)
 	jendTimedEvent(eventName);
 }
 
-void FlurryX::endTimedEvent(const char* eventName, CCDictionary* parameters)
+void FlurryX::endTimedEvent(const char* eventName, __Dictionary* parameters)
 {
 	init();
 	jendTimedEvent(eventName, parameters);

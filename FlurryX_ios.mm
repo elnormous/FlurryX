@@ -7,30 +7,30 @@
 #import "FlurryX.h"
 #import "Flurry.h"
 
-using namespace cocos2d;
+USING_NS_CC;
 
 inline NSString* CStrToNSString(const char* string)
 {
     return [NSString stringWithCString:string encoding:NSUTF8StringEncoding];
 }
 
-NSDictionary* CCDictionaryToNSDictionary(CCDictionary* dictionary)
+NSDictionary* CCDictionaryToNSDictionary(__Dictionary* dictionary)
 {
-    if ( !dictionary )
+    if (!dictionary)
 	{
         return NULL;
     }
 
     NSMutableDictionary* result = [NSMutableDictionary dictionary];
-	CCArray* keys = dictionary->allKeys();
+	__Array* keys = dictionary->allKeys();
 	
-	CCObject* object;
+	Ref* object;
 	
 	CCARRAY_FOREACH(keys, object)
 	{
-		CCString* key = (CCString*)object;
+		__String* key = (__String*)object;
 		
-        CCString* value = (CCString*)dictionary->objectForKey(key->getCString());
+        __String* value = (__String*)dictionary->objectForKey(key->getCString());
         [result setObject: CStrToNSString(value->getCString())
                    forKey: CStrToNSString(key->getCString())];
 	}
@@ -40,7 +40,7 @@ NSDictionary* CCDictionaryToNSDictionary(CCDictionary* dictionary)
 
 void FlurryX::setAppVersion(const char* version)
 {
-    [Flurry setAppVersion:CStrToNSString( version )];
+    [Flurry setAppVersion:CStrToNSString(version)];
 }
 
 const char* FlurryX::getFlurryAgentVersion()
@@ -60,7 +60,7 @@ void FlurryX::setDebugLogEnabled(bool value)
 
 void FlurryX::setSessionContinueMillis(long millis)
 {
-	int seconds = millis / 1000;
+	int seconds = (int)millis / 1000;
     [Flurry setSessionContinueSeconds:seconds];
 }
 
@@ -74,7 +74,7 @@ void FlurryX::setSecureTransportEnabled(bool value)
  */
 void FlurryX::startSession(const char* apiKey)
 {
-    [Flurry startSession:CStrToNSString( apiKey) ];
+    [Flurry startSession:CStrToNSString(apiKey) ];
 }
 
 /*
@@ -82,31 +82,31 @@ void FlurryX::startSession(const char* apiKey)
  */
 void FlurryX::logEvent(const char* eventName)
 {
-    [Flurry logEvent:CStrToNSString( eventName )];
+    [Flurry logEvent:CStrToNSString(eventName)];
 }
 
 void FlurryX::logEvent(const char* eventName, const char* paramName, const char* paramValue)
 {
-    CCDictionary* params = new CCDictionary();
-    CCString* value = new CCString( paramValue );
+    __Dictionary* params = __Dictionary::create();
+    __String* value = __String::create(paramValue);
     std::string strKey = paramName;
     params->setObject(value, strKey);
     
-    FlurryX::logEvent( eventName, params );
+    FlurryX::logEvent(eventName, params);
     
-    CC_SAFE_RELEASE_NULL( value );
-    CC_SAFE_RELEASE_NULL( params );
+    CC_SAFE_RELEASE_NULL(value);
+    CC_SAFE_RELEASE_NULL(params);
     
 }
 
-void FlurryX::logEvent(const char* eventName, CCDictionary* parameters)
+void FlurryX::logEvent(const char* eventName, __Dictionary* parameters)
 {
-    [Flurry logEvent:CStrToNSString( eventName ) withParameters:CCDictionaryToNSDictionary(parameters)];
+    [Flurry logEvent:CStrToNSString(eventName) withParameters:CCDictionaryToNSDictionary(parameters)];
 }
 
 void FlurryX::logError(const char* errorID, const char* message)
 {
-    [Flurry logError:CStrToNSString( errorID ) message:CStrToNSString( message ) exception:nil];
+    [Flurry logError:CStrToNSString(errorID) message:CStrToNSString(message) exception:nil];
 }
 
 /* 
@@ -114,12 +114,12 @@ void FlurryX::logError(const char* errorID, const char* message)
  */
 void FlurryX::logEvent(const char* eventName, bool timed)
 {
-    [Flurry logEvent:CStrToNSString( eventName ) timed:timed];    
+    [Flurry logEvent:CStrToNSString(eventName) timed:timed];
 }
 
-void FlurryX::logEvent(const char* eventName, CCDictionary* parameters, bool timed)
+void FlurryX::logEvent(const char* eventName, __Dictionary* parameters, bool timed)
 {
-	[Flurry logEvent:CStrToNSString( eventName ) withParameters:CCDictionaryToNSDictionary(parameters) timed:timed];
+	[Flurry logEvent:CStrToNSString(eventName) withParameters:CCDictionaryToNSDictionary(parameters) timed:timed];
 }
 
 void FlurryX::endTimedEvent(const char* eventName)
@@ -127,9 +127,9 @@ void FlurryX::endTimedEvent(const char* eventName)
 	[Flurry endTimedEvent:CStrToNSString(eventName) withParameters:nil];
 }
 
-void FlurryX::endTimedEvent(const char* eventName, CCDictionary* parameters)
+void FlurryX::endTimedEvent(const char* eventName, __Dictionary* parameters)
 {
-    [Flurry endTimedEvent:CStrToNSString( eventName) withParameters:CCDictionaryToNSDictionary(parameters)];
+    [Flurry endTimedEvent:CStrToNSString(eventName) withParameters:CCDictionaryToNSDictionary(parameters)];
 }
 
 /*
@@ -137,7 +137,7 @@ void FlurryX::endTimedEvent(const char* eventName, CCDictionary* parameters)
  */
 void FlurryX::setUserID(const char* userID)
 {
-    [Flurry setUserID:CStrToNSString( userID )];
+    [Flurry setUserID:CStrToNSString(userID)];
 }
 
 void FlurryX::setAge(int age)

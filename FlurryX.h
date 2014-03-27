@@ -40,16 +40,16 @@ public:
      */
     static void logEvent(const char* eventName);
     static void logEvent(const char* eventName, const char* paramName, const char* paramValue);
-    static void logEvent(const char* eventName, cocos2d::CCDictionary* parameters);
+    static void logEvent(const char* eventName, cocos2d::__Dictionary* parameters);
     static void logError(const char* errorID, const char* message);
     
     /* 
      start or end timed events
      */
     static void logEvent(const char* eventName, bool timed);
-    static void logEvent(const char* eventName, cocos2d::CCDictionary* parameters, bool timed);
+    static void logEvent(const char* eventName, cocos2d::__Dictionary* parameters, bool timed);
 	static void endTimedEvent(const char* eventName);
-    static void endTimedEvent(const char* eventName, cocos2d::CCDictionary* parameters);	// non-nil parameters will update the parameters
+    static void endTimedEvent(const char* eventName, cocos2d::__Dictionary* parameters);	// non-nil parameters will update the parameters
     
     /*
      set user info
