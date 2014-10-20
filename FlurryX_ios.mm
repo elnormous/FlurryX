@@ -4,46 +4,34 @@
 //  Created by Elviss Strazdins (based on FlurryAnalticsX by Dmitry Matyukhin)
 //
 
+#include <string>
 #import "FlurryX.h"
 #import "Flurry.h"
 
-USING_NS_CC;
-
-inline NSString* CStrToNSString(const char* string)
+static inline NSString* StringToNSString(const std::string& str)
 {
-    return [NSString stringWithCString:string encoding:NSUTF8StringEncoding];
+    return [NSString stringWithCString: str.c_str() encoding: NSUTF8StringEncoding];
 }
 
-NSDictionary* CCDictionaryToNSDictionary(__Dictionary* dictionary)
+static NSDictionary* MapToNSDictionary(const std::map<std::string, std::string>& values)
 {
-    if (!dictionary)
-	{
-        return NULL;
-    }
-
     NSMutableDictionary* result = [NSMutableDictionary dictionary];
-	__Array* keys = dictionary->allKeys();
-	
-	Ref* object;
-	
-	CCARRAY_FOREACH(keys, object)
+
+	for (auto value : values)
 	{
-		__String* key = (__String*)object;
-		
-        __String* value = (__String*)dictionary->objectForKey(key->getCString());
-        [result setObject: CStrToNSString(value->getCString())
-                   forKey: CStrToNSString(key->getCString())];
+		[result setObject: StringToNSString(value.first)
+				   forKey: StringToNSString(value.second)];
 	}
 
     return result;
 }
 
-void FlurryX::setAppVersion(const char* version)
+void FlurryX::setAppVersion(const std::string& version)
 {
-    [Flurry setAppVersion:CStrToNSString(version)];
+    [Flurry setAppVersion:StringToNSString(version)];
 }
 
-const char* FlurryX::getFlurryAgentVersion()
+std::string FlurryX::getFlurryAgentVersion()
 {
     return [[Flurry getFlurryAgentVersion] cStringUsingEncoding:NSUTF8StringEncoding];
 }
@@ -72,72 +60,66 @@ void FlurryX::setSecureTransportEnabled(bool value)
 /*
  start session, attempt to send saved sessions to server 
  */
-void FlurryX::startSession(const char* apiKey)
+void FlurryX::startSession(const std::string& apiKey)
 {
-    [Flurry startSession:CStrToNSString(apiKey) ];
+    [Flurry startSession:StringToNSString(apiKey) ];
 }
 
 /*
  log events or errors after session has started
  */
-void FlurryX::logEvent(const char* eventName)
+void FlurryX::logEvent(const std::string& eventName)
 {
-    [Flurry logEvent:CStrToNSString(eventName)];
+    [Flurry logEvent:StringToNSString(eventName)];
 }
 
-void FlurryX::logEvent(const char* eventName, const char* paramName, const char* paramValue)
+void FlurryX::logEvent(const std::string& eventName, const std::string& paramName, const std::string& paramValue)
 {
-    __Dictionary* params = __Dictionary::create();
-    __String* value = __String::create(paramValue);
-    std::string strKey = paramName;
-    params->setObject(value, strKey);
+	std::map<std::string, std::string> params;
+	params[paramName] = paramValue;
     
     FlurryX::logEvent(eventName, params);
-    
-    CC_SAFE_RELEASE_NULL(value);
-    CC_SAFE_RELEASE_NULL(params);
-    
 }
 
-void FlurryX::logEvent(const char* eventName, __Dictionary* parameters)
+void FlurryX::logEvent(const std::string& eventName, const std::map<std::string, std::string>& parameters)
 {
-    [Flurry logEvent:CStrToNSString(eventName) withParameters:CCDictionaryToNSDictionary(parameters)];
+    [Flurry logEvent:StringToNSString(eventName) withParameters:MapToNSDictionary(parameters)];
 }
 
-void FlurryX::logError(const char* errorID, const char* message)
+void FlurryX::logError(const std::string& errorID, const std::string& message)
 {
-    [Flurry logError:CStrToNSString(errorID) message:CStrToNSString(message) exception:nil];
+    [Flurry logError:StringToNSString(errorID) message:StringToNSString(message) exception:nil];
 }
 
 /* 
  start or end timed events
  */
-void FlurryX::logEvent(const char* eventName, bool timed)
+void FlurryX::logEvent(const std::string& eventName, bool timed)
 {
-    [Flurry logEvent:CStrToNSString(eventName) timed:timed];
+    [Flurry logEvent:StringToNSString(eventName) timed:timed];
 }
 
-void FlurryX::logEvent(const char* eventName, __Dictionary* parameters, bool timed)
+void FlurryX::logEvent(const std::string& eventName, const std::map<std::string, std::string>& parameters, bool timed)
 {
-	[Flurry logEvent:CStrToNSString(eventName) withParameters:CCDictionaryToNSDictionary(parameters) timed:timed];
+	[Flurry logEvent:StringToNSString(eventName) withParameters:MapToNSDictionary(parameters) timed:timed];
 }
 
-void FlurryX::endTimedEvent(const char* eventName)
+void FlurryX::endTimedEvent(const std::string& eventName)
 {
-	[Flurry endTimedEvent:CStrToNSString(eventName) withParameters:nil];
+	[Flurry endTimedEvent:StringToNSString(eventName) withParameters:nil];
 }
 
-void FlurryX::endTimedEvent(const char* eventName, __Dictionary* parameters)
+void FlurryX::endTimedEvent(const std::string& eventName, const std::map<std::string, std::string>& parameters)
 {
-    [Flurry endTimedEvent:CStrToNSString(eventName) withParameters:CCDictionaryToNSDictionary(parameters)];
+    [Flurry endTimedEvent:StringToNSString(eventName) withParameters:MapToNSDictionary(parameters)];
 }
 
 /*
  set user info
  */
-void FlurryX::setUserID(const char* userID)
+void FlurryX::setUserID(const std::string& userID)
 {
-    [Flurry setUserID:CStrToNSString(userID)];
+    [Flurry setUserID:StringToNSString(userID)];
 }
 
 void FlurryX::setAge(int age)

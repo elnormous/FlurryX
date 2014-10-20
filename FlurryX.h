@@ -7,8 +7,6 @@
 #ifndef FLURRY_X_H
 #define FLURRY_X_H
 
-#include <cocos2d.h>
-
 class FlurryX
 {
 public:
@@ -23,8 +21,8 @@ public:
     /*
      optional sdk settings that should be called before start session
      */
-    static void setAppVersion(const char* version);		// override the app version
-    static const char* getFlurryAgentVersion();			// get the Flurry Agent version number
+    static void setAppVersion(const std::string& version);		// override the app version
+	static std::string getFlurryAgentVersion();			// get the Flurry Agent version number
     static void setShowErrorInLogEnabled(bool value);	// default is NO
     static void setDebugLogEnabled(bool value);			// generate debug logs for Flurry support, default is NO
     static void setSessionContinueMillis(long millis); // default is 10 seconds
@@ -33,28 +31,28 @@ public:
     /*
      start session, attempt to send saved sessions to server 
      */
-    static void startSession(const char* apiKey);
+    static void startSession(const std::string& apiKey);
     
     /*
      log events or errors after session has started
      */
-    static void logEvent(const char* eventName);
-    static void logEvent(const char* eventName, const char* paramName, const char* paramValue);
-    static void logEvent(const char* eventName, cocos2d::__Dictionary* parameters);
-    static void logError(const char* errorID, const char* message);
+    static void logEvent(const std::string& eventName);
+    static void logEvent(const std::string& eventName, const std::string& paramName, const std::string& paramValue);
+    static void logEvent(const std::string& eventName, const std::map<std::string, std::string>& parameters);
+    static void logError(const std::string& errorID, const std::string& message);
     
     /* 
      start or end timed events
      */
-    static void logEvent(const char* eventName, bool timed);
-    static void logEvent(const char* eventName, cocos2d::__Dictionary* parameters, bool timed);
-	static void endTimedEvent(const char* eventName);
-    static void endTimedEvent(const char* eventName, cocos2d::__Dictionary* parameters);	// non-nil parameters will update the parameters
+    static void logEvent(const std::string& eventName, bool timed);
+    static void logEvent(const std::string& eventName, const std::map<std::string, std::string>& parameters, bool timed);
+	static void endTimedEvent(const std::string& eventName);
+    static void endTimedEvent(const std::string& eventName, const std::map<std::string, std::string>& parameters);	// non-nil parameters will update the parameters
     
     /*
      set user info
      */
-    static void setUserID(const char* userID);	// user's id in your system
+    static void setUserID(const std::string& userID);	// user's id in your system
     static void setAge(int age);				// user's age in years
     static void setGender(Gender gender);	// user's gender
     

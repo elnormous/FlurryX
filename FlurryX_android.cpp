@@ -10,8 +10,6 @@
 #include <android/log.h>
 #include <jni.h>
 
-using namespace cocos2d;
-
 static const char* const LOG_TAG = "FlurryXJni";
 
 static bool initialized = false;
@@ -85,9 +83,9 @@ static bool init()
 	return result;
 }
 
-void jsetAppVersion(const char *version)
+void jsetAppVersion(const std::string& version)
 {
-	jstring stringArg = setAppVersionMethodInfo.env->NewStringUTF(version);
+	jstring stringArg = setAppVersionMethodInfo.env->NewStringUTF(version.c_str());
 	setAppVersionMethodInfo.env->CallStaticVoidMethod(setAppVersionMethodInfo.classID, setAppVersionMethodInfo.methodID, stringArg);
 	setAppVersionMethodInfo.env->DeleteLocalRef(stringArg);
 }
@@ -128,29 +126,21 @@ void jsetSecureTransportEnabled(bool value)
 /*
  log events or errors after session has started
  */
-void jlogEvent1(const char* eventName)
+void jlogEvent1(const std::string& eventName)
 {
-	jstring stringArg = logEvent1MethodInfo.env->NewStringUTF(eventName);
+	jstring stringArg = logEvent1MethodInfo.env->NewStringUTF(eventName.c_str());
 	logEvent1MethodInfo.env->CallStaticVoidMethod(logEvent1MethodInfo.classID, logEvent1MethodInfo.methodID, stringArg);
 	logEvent1MethodInfo.env->DeleteLocalRef(stringArg);
 }
 
-void jlogEvent3(const char* eventName, __Dictionary* parameters)
+void jlogEvent3(const std::string& eventName, const std::map<std::string, std::string>& parameters)
 {	
 	jobject hashMap = logEvent3MethodInfo.env->NewObject(hashMapClass, hashMapInitMethod);
 	
-	CCArray* keys = parameters->allKeys();
-	
-	Ref* object;
-	
-	CCARRAY_FOREACH(keys, object)
-	{
-		__String* key = (__String*)object;
-		
-		__String* value = (__String*)parameters->objectForKey(key->getCString());
-		
-		jstring stringKey = logEvent3MethodInfo.env->NewStringUTF(key->getCString());
-		jstring stringValue = logEvent3MethodInfo.env->NewStringUTF(value->getCString());
+	for (auto value : parameters)
+	{		
+		jstring stringKey = logEvent3MethodInfo.env->NewStringUTF(value.first.c_str());
+		jstring stringValue = logEvent3MethodInfo.env->NewStringUTF(value.second.c_str());
 		
 		logEvent3MethodInfo.env->CallObjectMethod(hashMap, hashMapPutMethod, stringKey, stringValue);
 		
@@ -163,10 +153,10 @@ void jlogEvent3(const char* eventName, __Dictionary* parameters)
 	logEvent3MethodInfo.env->DeleteLocalRef(hashMap);
 }
 
-void jlogError(const char* errorID, const char* message)
+void jlogError(const std::string& errorID, const std::string& message)
 {	
-	jstring stringError = onErrorMethodInfo.env->NewStringUTF(errorID);
-	jstring stringMessage = onErrorMethodInfo.env->NewStringUTF(message);
+	jstring stringError = onErrorMethodInfo.env->NewStringUTF(errorID.c_str());
+	jstring stringMessage = onErrorMethodInfo.env->NewStringUTF(message.c_str());
 	jstring stringClass = onErrorMethodInfo.env->NewStringUTF("JNI");
 	onErrorMethodInfo.env->CallStaticVoidMethod(onErrorMethodInfo.classID, onErrorMethodInfo.methodID, stringError, stringMessage, stringClass);
 	onErrorMethodInfo.env->DeleteLocalRef(stringError);
@@ -177,29 +167,23 @@ void jlogError(const char* errorID, const char* message)
 /*
  start or end timed events
  */
-void jlogEvent4(const char* eventName, bool timed)
+void jlogEvent4(const std::string& eventName, bool timed)
 {
-	jstring stringArg = logEvent4MethodInfo.env->NewStringUTF(eventName);
+	jstring stringArg = logEvent4MethodInfo.env->NewStringUTF(eventName.c_str());
 	logEvent4MethodInfo.env->CallStaticVoidMethod(logEvent4MethodInfo.classID, logEvent4MethodInfo.methodID, stringArg, timed);
 	logEvent4MethodInfo.env->DeleteLocalRef(stringArg);
 }
 
-void jlogEvent5(const char* eventName, __Dictionary* parameters, bool timed)
+void jlogEvent5(const std::string& eventName, const std::map<std::string, std::string>& parameters, bool timed)
 {	
 	jobject hashMap = logEvent5MethodInfo.env->NewObject(hashMapClass, hashMapInitMethod);
 	
-	CCArray* keys = parameters->allKeys();
-	
 	Ref* object;
 	
-	CCARRAY_FOREACH(keys, object)
-	{
-		__String* key = (__String*)object;
-		
-		__String* value = (__String*)parameters->objectForKey(key->getCString());
-		
-		jstring stringKey = logEvent5MethodInfo.env->NewStringUTF(key->getCString());
-		jstring stringValue = logEvent5MethodInfo.env->NewStringUTF(value->getCString());
+	for (auto value : values)
+	{		
+		jstring stringKey = logEvent5MethodInfo.env->NewStringUTF(value.first.c_str());
+		jstring stringValue = logEvent5MethodInfo.env->NewStringUTF(value.second.c_str());
 		
 		logEvent5MethodInfo.env->CallObjectMethod(hashMap, hashMapPutMethod, stringKey, stringValue);
 		
@@ -211,31 +195,23 @@ void jlogEvent5(const char* eventName, __Dictionary* parameters, bool timed)
 	logEvent5MethodInfo.env->DeleteLocalRef(hashMap);
 }
 
-void jendTimedEvent(const char* eventName)
+void jendTimedEvent(const std::string& eventName)
 {
-	jstring stringArg = endTimedEvent1MethodInfo.env->NewStringUTF(eventName);
+	jstring stringArg = endTimedEvent1MethodInfo.env->NewStringUTF(eventName.c_str());
 	endTimedEvent1MethodInfo.env->CallStaticVoidMethod(endTimedEvent1MethodInfo.classID, endTimedEvent1MethodInfo.methodID, stringArg);
 	endTimedEvent1MethodInfo.env->DeleteLocalRef(stringArg);
 }
 
-void jendTimedEvent(const char* eventName, __Dictionary* parameters)
+void jendTimedEvent(const std::string& eventName, const std::map<std::string, std::string>& parameters)
 {
-	jstring stringArg = endTimedEvent2MethodInfo.env->NewStringUTF(eventName);
+	jstring stringArg = endTimedEvent2MethodInfo.env->NewStringUTF(eventName.c_str());
 	
 	jobject hashMap = endTimedEvent2MethodInfo.env->NewObject(hashMapClass, hashMapInitMethod);
 	
-	CCArray* keys = parameters->allKeys();
-	
-	Ref* object;
-	
-	CCARRAY_FOREACH(keys, object)
-	{
-		__String* key = (__String*)object;
-		
-		__String* value = (__String*)parameters->objectForKey(key->getCString());
-		
-		jstring stringKey = endTimedEvent2MethodInfo.env->NewStringUTF(key->getCString());
-		jstring stringValue = endTimedEvent2MethodInfo.env->NewStringUTF(value->getCString());
+	for (auto value : values)
+	{		
+		jstring stringKey = endTimedEvent2MethodInfo.env->NewStringUTF(value.first.c_str());
+		jstring stringValue = endTimedEvent2MethodInfo.env->NewStringUTF(value.second.c_str());
 		
 		endTimedEvent2MethodInfo.env->CallObjectMethod(hashMap, hashMapPutMethod, stringKey, stringValue);
 		
@@ -251,9 +227,9 @@ void jendTimedEvent(const char* eventName, __Dictionary* parameters)
 /*
  set user info
  */
-void jsetUserID(const char* userID)
+void jsetUserID(const std::string& userID)
 {
-	jstring stringArg = setUserIdMethodInfo.env->NewStringUTF(userID);
+	jstring stringArg = setUserIdMethodInfo.env->NewStringUTF(userID.c_str());
 	setUserIdMethodInfo.env->CallStaticVoidMethod(setUserIdMethodInfo.classID, setUserIdMethodInfo.methodID, stringArg);
 	setUserIdMethodInfo.env->DeleteLocalRef(stringArg);
 }
@@ -288,13 +264,13 @@ void jsetReportLocation(bool reportLocation)
 	setReportLocationMethodInfo.env->CallStaticVoidMethod(setReportLocationMethodInfo.classID, setReportLocationMethodInfo.methodID, reportLocation);
 }
 
-void FlurryX::setAppVersion(const char *version)
+void FlurryX::setAppVersion(const std::string& version)
 {
 	init();
 	jsetAppVersion(version);
 }
 
-const char* FlurryX::getFlurryAgentVersion()
+std::string FlurryX::getFlurryAgentVersion()
 {
 	init();
 	return jgetFlurryAgentVersion();
@@ -327,7 +303,7 @@ void FlurryX::setSecureTransportEnabled(bool value)
 /*
  start session, attempt to send saved sessions to server 
  */
-void FlurryX::startSession(const char* apiKey)
+void FlurryX::startSession(const std::string& apiKey)
 {
 	// FIX: Better start session in java
 //	jstartSession(apiKey);
@@ -336,33 +312,28 @@ void FlurryX::startSession(const char* apiKey)
 /*
  log events or errors after session has started
  */
-void FlurryX::logEvent(const char* eventName)
+void FlurryX::logEvent(const std::string& eventName)
 {
 	init();
 	jlogEvent1(eventName);
 }
 
-void FlurryX::logEvent(const char* eventName, const char* paramName, const char* paramValue)
+void FlurryX::logEvent(const std::string& eventName, const std::string& paramName, const std::string& paramValue)
 {
 	init();
-    __Dictionary* params = __Dictionary::create();
-    __String* value = __String::create(paramValue);
-    std::string strKey = paramName;
-    params->setObject(value, strKey);
+    std::map<std::string, std::string> params;
+    params[paramName] = paramValue;
 
     logEvent(eventName, params);
-    
-    CC_SAFE_RELEASE_NULL(value);
-    CC_SAFE_RELEASE_NULL(params);
 }
 
-void FlurryX::logEvent(const char* eventName, __Dictionary* parameters)
+void FlurryX::logEvent(const std::string& eventName, const std::map<std::string, std::string>& parameters)
 {
 	init();
 	jlogEvent3(eventName, parameters);
 }
 
-void FlurryX::logError(const char* errorID, const char *message)
+void FlurryX::logError(const std::string& errorID, const std::string& message)
 {
 	init();
 	jlogError(errorID, message);
@@ -371,25 +342,25 @@ void FlurryX::logError(const char* errorID, const char *message)
 /* 
  start or end timed events
  */
-void FlurryX::logEvent(const char* eventName, bool timed)
+void FlurryX::logEvent(const std::string& eventName, bool timed)
 {
 	init();
 	jlogEvent4(eventName, timed);
 }
 
-void FlurryX::logEvent(const char* eventName, __Dictionary* parameters, bool timed)
+void FlurryX::logEvent(const std::string& eventName, const std::map<std::string, std::string>& parameters, bool timed)
 {
 	init();
 	jlogEvent5(eventName, parameters, timed);
 }
 
-void FlurryX::endTimedEvent(const char* eventName)
+void FlurryX::endTimedEvent(const std::string& eventName)
 {
 	init();
 	jendTimedEvent(eventName);
 }
 
-void FlurryX::endTimedEvent(const char* eventName, __Dictionary* parameters)
+void FlurryX::endTimedEvent(const std::string& eventName, const std::map<std::string, std::string>& parameters)
 {
 	init();
 	jendTimedEvent(eventName, parameters);
@@ -398,7 +369,7 @@ void FlurryX::endTimedEvent(const char* eventName, __Dictionary* parameters)
 /*
  set user info
  */
-void FlurryX::setUserID(const char* userID)
+void FlurryX::setUserID(const std::string& userID)
 {
 	init();
 	jsetUserID(userID);
