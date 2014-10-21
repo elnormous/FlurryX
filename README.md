@@ -1,7 +1,7 @@
 FlurryX
 =======
 
-Flurry Analytics C++ wrapper for Cocos2d-x
+Flurry Analytics C++ wrapper for iOS and Android.
 
 Usage:
 
