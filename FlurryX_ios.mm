@@ -54,7 +54,7 @@ void FlurryX::setSessionContinueMillis(long millis)
 
 void FlurryX::setSecureTransportEnabled(bool value)
 {
-    [Flurry setSecureTransportEnabled:value];
+	
 }
 
 /*
